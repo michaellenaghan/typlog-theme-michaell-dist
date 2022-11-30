@@ -1,0 +1,447 @@
+{% set config = query.config("michaell") %}
+
+{#
+    Pages are:
+    * home.j2
+        * page is None
+    * list.j2
+        * page is a "mini page"
+        * page.type is audio_list, author, lang, list (incl. year), post_list, tag
+    * item.j2
+        * page is a "full page"
+        * page.type is audio, page, post
+#}
+
+{% set is_home = false %}
+
+{% set is_list = false %}
+{% set is_list_audio = false %}
+{% set is_list_author = false %}
+{% set is_list_lang = false %}
+{% set is_list_list = false %}
+{% set is_list_post = false %}
+{% set is_list_tag = false %}
+
+{% set list_author = None %}
+{% set list_lang = None %}
+{% set list_tag = None %}
+
+{% set is_item = false %}
+{% set is_item_audio = false %}
+{% set is_item_page = false %}
+{% set is_item_post = false %}
+
+{% if page is undefined %}
+    {% set is_home = true %}
+{% elif page.topic is defined %}
+    {% set is_list = true %}
+    {% if page.type == "audio_list" %}
+        {% set is_list_audio = true %}
+    {% elif page.type == "author" %}
+        {% set is_list_author = true %}
+        {% set list_author = page.topic %}
+    {% elif page.type == "lang" %}
+        {% set is_list_lang = true %}
+        {% set list_lang = page.topic %}
+    {% elif page.type == "list" %}
+        {% set is_list_list = true %}
+    {% elif page.type == "post" %}
+        {% set is_list_post = true %}
+    {% elif page.type == "tag" %}
+        {% set is_list_tag = true %}
+        {% set list_tag = page.topic %}
+    {% endif %}
+{% else %}
+    {% set is_item = true %}
+    {% if page.type == "audio" %}
+        {% set is_item_audio = true %}
+    {% elif page.type == "page" %}
+        {% set is_item_page = true %}
+    {% elif page.type == "post" %}
+        {% set is_item_post = true %}
+    {% endif %}
+{% endif %}
+
+{# Block: Body #}
+
+{% block body %}
+    {% if is_home %}
+        {{ render_home(site, features) }}
+    {% elif is_list %}
+        {{ render_list(site, features, page) }}
+    {% elif is_item %}
+        {{ render_item(site, features, page) }}
+    {% endif %}
+{% endblock %}
+
+{# Block: Script #}
+
+{% block script %}
+    <script src="{{ static_url }}main.js"></script>
+{% endblock %}
+
+{# Block: Style #}
+
+{% block style %}
+    <link href="https://static.michaell.io/" rel="preconnect">
+    <link as="font" crossorigin="anonymous" href="https://static.michaell.io/fonts/Bitter-VariableFont_wght.ttf" rel="preload" type="font/ttf">
+ {# <link as="font" crossorigin="anonymous" href="https://static.michaell.io/fonts/Bitter-Italic-VariableFont_wght.ttf" rel="preload" type="font/ttf"> #}
+ {# <link href="https://s3.typlog.com/npm/@typlog/yue@1.0.0/yue.css" rel="stylesheet"> #}
+    <link href="{{ static_url }}main.css" rel="stylesheet">
+{% endblock %}
+
+{# Page: Home #}
+
+{% macro render_home(site, features) %}
+    {{ render_site_header(site, features) }}
+    {{ render_home_header(site, features) }}
+    {{ render_home_body(site, features) }}
+    {{ render_home_footer(site, features) }}
+    {{ render_site_footer(site, features) }}
+{% endmacro %}
+
+{% macro render_home_header(site, features) %}
+
+{% endmacro %}
+
+{% macro render_home_body(site, features) %}
+    {{ render_items_any_body(site, features, query.latest_subjects(count=1000)) }}
+{% endmacro %}
+
+{% macro render_home_footer(site, features) %}
+
+{% endmacro %}
+
+{# Page: List #}
+
+{% macro render_list(site, features, list) %}
+    {{ render_site_header(site, features) }}
+    {% if is_list_audio %}
+        {{ render_list_audio(site, features, list) }}
+    {% elif is_list_author %}
+        {{ render_list_author(site, features, list) }}
+    {% elif is_list_lang %}
+        {{ render_list_lang(site, features, list) }}
+    {% elif is_list_list %}
+        {{ render_list_list(site, features, list) }}
+    {% elif is_list_post %}
+        {{ render_list_post(site, features, list) }}
+    {% elif is_list_tag %}
+        {{ render_list_tag(site, features, list) }}
+    {% endif %}
+    {{ render_site_footer(site, features) }}
+{% endmacro %}
+
+{# Page: List: Audio #}
+
+{% macro render_list_audio(site, features, list) %}
+    {{ render_list_audio_header(site, features, list) }}
+    {{ render_list_audio_body(site, features, list) }}
+    {{ render_list_audio_footer(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_audio_header(site, features, list) %}
+    {{ render_list_any_header(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_audio_body(site, features, list) %}
+    {{ render_list_any_body(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_audio_footer(site, features, list) %}
+    {{ render_list_any_footer(site, features, list) }}
+{% endmacro %}
+
+{# Page: List: Author #}
+
+{% macro render_list_author(site, features, list) %}
+    {{ render_list_author_header(site, features, list) }}
+    {{ render_list_author_body(site, features, list) }}
+    {{ render_list_author_footer(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_author_header(site, features, list) %}
+    {{ render_list_any_header(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_author_body(site, features, list) %}
+    {{ render_list_any_body(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_author_footer(site, features, list) %}
+    {{ render_list_any_footer(site, features, list) }}
+{% endmacro %}
+
+{# Page: List: Lang #}
+
+{% macro render_list_lang(site, features, list) %}
+    {{ render_list_lang_header(site, features, list) }}
+    {{ render_list_lang_body(site, features, list) }}
+    {{ render_list_lang_footer(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_lang_header(site, features, list) %}
+    {{ render_list_any_header(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_lang_body(site, features, list) %}
+    {{ render_list_any_body(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_lang_footer(site, features, list) %}
+    {{ render_list_any_footer(site, features, list) }}
+{% endmacro %}
+
+{# Page: List: List #}
+
+{% macro render_list_list(site, features, list) %}
+    {{ render_list_list_header(site, features, list) }}
+    {{ render_list_list_body(site, features, list) }}
+    {{ render_list_list_footer(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_list_header(site, features, list) %}
+    {{ render_list_any_header(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_list_body(site, features, list) %}
+    {{ render_list_any_body(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_list_footer(site, features, list) %}
+    {{ render_list_any_footer(site, features, list) }}
+{% endmacro %}
+
+{# Page: List: Post #}
+
+{% macro render_list_post(site, features, list) %}
+    {{ render_list_post_header(site, features, list) }}
+    {{ render_list_post_body(site, features, list) }}
+    {{ render_list_post_footer(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_post_header(site, features, list) %}
+    {{ render_list_any_header(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_post_body(site, features, list) %}
+    {{ render_list_any_body(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_post_footer(site, features, list) %}
+    {{ render_list_any_footer(site, features, list) }}
+{% endmacro %}
+
+{# Page: List: Tag #}
+
+{% macro render_list_tag(site, features, list) %}
+    {{ render_list_tag_header(site, features, list) }}
+    {{ render_list_tag_body(site, features, list) }}
+    {{ render_list_tag_footer(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_tag_header(site, features, list) %}
+    {{ render_list_any_header(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_tag_body(site, features, list) %}
+    {{ render_list_any_body(site, features, list) }}
+{% endmacro %}
+
+{% macro render_list_tag_footer(site, features, list) %}
+    {{ render_list_any_footer(site, features, list) }}
+{% endmacro %}
+
+{# Page: Item #}
+
+{% macro render_item(site, features, item) %}
+    {{ render_site_header(site, features) }}
+    <article role="main" itemscope="" itemtype="http://schema.org/Article">
+    {% if is_item_audio %}
+        {{ render_item_audio(site, features, item) }}
+    {% elif is_item_page %}
+        {{ render_item_page(site, features, item) }}
+    {% elif is_item_post %}
+        {{ render_item_post(site, features, item) }}
+    {% endif %}
+    </article>
+    {{ render_site_footer(site, features) }}
+{% endmacro %}
+
+{# Page: Item: Audio #}
+
+{% macro render_item_audio(site, features, item) %}
+    {{ render_item_audio_header(site, features, item) }}
+    {{ render_item_audio_body(site, features, item) }}
+    {{ render_item_audio_footer(site, features, item) }}
+{% endmacro %}
+
+{% macro render_item_audio_header(site, features, item) %}
+    {{ render_item_any_header(site, features, item) }}
+{% endmacro %}
+
+{% macro render_item_audio_body(site, features, item) %}
+    {{ render_item_any_body(site, features, item) }}
+{% endmacro %}
+
+{% macro render_item_audio_footer(site, features, item) %}
+    {{ render_item_any_footer(site, features, item) }}
+{% endmacro %}
+
+{# Page: Item: Page #}
+
+{% macro render_item_page(site, features, item) %}
+    {{ render_item_page_header(site, features, item) }}
+    {{ render_item_page_body(site, features, item) }}
+    {{ render_item_page_footer(site, features, item) }}
+{% endmacro %}
+
+{% macro render_item_page_header(site, features, item) %}
+    {{ render_item_any_header(site, features, item) }}
+{% endmacro %}
+
+{% macro render_item_page_body(site, features, item) %}
+    {{ render_item_any_body(site, features, item) }}
+{% endmacro %}
+
+{% macro render_item_page_footer(site, features, item) %}
+    {{ render_item_any_footer(site, features, item) }}
+{% endmacro %}
+
+{# Page: Item: Post #}
+
+{% macro render_item_post(site, features, item) %}
+    {{ render_item_post_header(site, features, item) }}
+    {{ render_item_post_body(site, features, item) }}
+    {{ render_item_post_footer(site, features, item) }}
+{% endmacro %}
+
+{% macro render_item_post_header(site, features, item) %}
+    {{ render_item_any_header(site, features, item) }}
+{% endmacro %}
+
+{% macro render_item_post_body(site, features, item) %}
+    {{ render_item_any_body(site, features, item) }}
+{% endmacro %}
+
+{% macro render_item_post_footer(site, features, item) %}
+    {{ render_item_any_footer(site, features, item) }}
+{% endmacro %}
+
+{# --- Common --- #}
+
+{# Site #}
+
+{% macro render_site_header(site, features) %}
+    <div class="d-flex flex-column min-vh-100">
+        {{ render_site_outer_header(site) }}
+        <div class="container-readable flex-grow-1">
+            {{ render_site_inner_header(site) }}
+{% endmacro %}
+
+{% macro render_site_footer(site, features) %}
+            {{ render_site_inner_footer(site) }}
+        </div>
+        {{ render_site_outer_footer(site) }}
+    </div>
+{% endmacro %}
+
+{% macro render_site_outer_header(site) %}
+    <header>
+        <nav class="bg-dark navbar navbar-dark navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="h1 mb-0 navbar-brand" href="/">{{ site.name }}</a>
+                <button type="button" class="btn btn-dark js-search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+{% endmacro %}
+
+{% macro render_site_outer_footer(site) %}
+{% if config and config.footer_message %}
+    <footer class="bg-dark container-fluid text-light">
+        <div class="ps-2 ps-md-3 py-2 py-md-4">
+            <small>{{ config.footer_message|safe }}</small>
+        </div>
+        <div class="border-light border-opacity-10 border-top container-fluid py-2 text-end">
+            <small class="opacity-50">Powered by <a class="text-reset" href="https://typlog.com/">Typlog</a></small>
+        </div>
+    </footer>
+{% endif %}
+{% endmacro %}
+
+{% macro render_site_inner_header(site) %}
+    <div class="py-6 py-md-7">
+        {% if site.logo %}
+        <a href="{{ linkify('/') }}">
+          <img class="mb-1" src="{{ site.logo.src|thumbnail('m') }}" alt="{{ site.name }}" width="225">
+        </a>
+        {% else %}
+        <p class="h1 mb-0"><a href="{{ linkify('/') }}">{{ site.name }}</a></p>
+        {% endif %}
+        {% if site.summary %}
+        <p class="lead mb-0">{{ site.summary }}</p>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro render_site_inner_footer(site) %}
+    <div class="pt-4 pt-md-5">
+    </div>
+{% endmacro %}
+
+{# List #}
+
+{% macro render_list_any_header(site, features, list) %}
+    <div class="pb-4 pb-md-5">
+        <h2>{{ list.title }}</h2>
+    </div>
+{% endmacro %}
+
+{% macro render_list_any_body(site, features, list) %}
+    {{ render_items_any_body(site, features, list.items) }}
+{% endmacro %}
+
+{% macro render_list_any_footer(site, features, list) %}
+{% endmacro %}
+
+{# Items #}
+
+{% macro render_items_any_body(site, features, items) %}
+    {% for item in items %}
+    <div class="pb-5 pb-md-6">
+        <hr class="mb-4 mt-0 w-33" />
+        {% if item.type == "post" and item.published_at %}
+        <time class="h6 text-muted text-uppercase" datetime="{{ item.published_at|xmldatetime }}"
+                itemprop="datePublished">{{ item.published_at.strftime("%-d %B %Y") }}</time>
+        {% endif %}
+        <h2><a href="{{ item.url }}">{{ item.title }}</a></h2>
+    </div>
+    {% endfor %}
+{% endmacro %}
+
+{# Item #}
+
+{% macro render_item_any_header(site, features, item) %}
+    <div class="pb-4 pb-md-5">
+        {% if item.type == "post" and item.published_at %}
+        <time class="h6 text-muted text-uppercase" datetime="{{ item.published_at|xmldatetime }}"
+                itemprop="datePublished">{{ item.published_at.strftime("%-d %B %Y") }}</time>
+        {% endif %}
+        <h1 itemprop="headline">{{ item.title }}</h1>
+    </div>
+{% endmacro %}
+
+{% macro render_item_any_body(site, features, item) %}
+    {# js-content is required for (at least) image galleries. And it's undocumented. #}
+    <div class="js-content markdown pb-4 pb-md-5" itemprop="articleBody">
+        {{ item.render_html()|safe }}
+    </div>
+{% endmacro %}
+
+{% macro render_item_any_footer(site, features, item) %}
+{% endmacro %}

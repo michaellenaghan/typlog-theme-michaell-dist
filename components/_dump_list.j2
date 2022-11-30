@@ -1,0 +1,15 @@
+<h2>
+    List
+</h2>
+<ul>
+    {# This `page` isn't iterable. #}
+    <li>items: {{ page.items }}</li>
+    <li>next_url: {{ page.next_url }}</li>
+    <li>next_year: {{ page.next_year }}</li>
+    <li>prev_url: {{ page.prev_url }}</li>
+    <li>prev_year: {{ page.prev_year }}</li>
+    <li>title: {{ page.title }}</li>
+    <li>topic: {{ page.topic | dictsort }}</li>
+    <li>type: {{ page.type }}</li>
+    <li>url: {{ page.url }}</li>
+</ul>

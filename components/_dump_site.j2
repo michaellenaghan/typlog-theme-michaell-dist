@@ -1,0 +1,8 @@
+<h2>
+    Site
+</h2>
+<ul>
+{% for key, val in site | dictsort %}
+    <li>{{ key }}: {{ val }}</li>
+{% endfor %}
+</ul>
