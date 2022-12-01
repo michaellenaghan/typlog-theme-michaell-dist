@@ -78,6 +78,9 @@
 
 {% block script %}
  {# <script src="{{ static_url }}main.js"></script> #}
+    {% if config and config.plausible and config.plausible.domain and config.plausible.url %}
+    <script async defer data-domain="{{ config.plausible.domain }}" src="{{ config.plausible.url }}"></script>
+    {% endif %}
 {% endblock %}
 
 {# Block: Style #}
